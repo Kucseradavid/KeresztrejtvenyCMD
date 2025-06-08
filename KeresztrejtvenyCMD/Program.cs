@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!no");
+            Console.WriteLine("Hello, World!no | ez a feladat kikészít");
 
             //string forras = "../../../kr1.txt";
             string forras = "../../../kr2.txt";
@@ -24,6 +24,8 @@
             Console.WriteLine($"7. feladat: A leghosszabb függ.: {racs.LegFugSzo()} karakter"); //nem működik megfelelően
 
             Console.WriteLine("8. feladat: Vízszintes szavak statisztikája");
+            List<VizszintStatisztika> stat = racs.VSZStat();
+            foreach (VizszintStatisztika adat in stat) Console.WriteLine($"\t{adat.Hossz} betűs: {adat.Darab} darab");
         }
     }
 }

@@ -8,13 +8,13 @@ namespace KeresztrejtvenyCMD
 {
     internal class VizszintStatisztika
     {
-        public int hossz {  get; set; }
-        public int darab { get; set; }
+        public int Hossz {  get; set; }
+        public int Darab { get; set; }
 
-        public VizszintStatisztika (int hossz, int darab)
+        public VizszintStatisztika (int hossz)
         {
-            this.hossz = hossz;
-            this.darab = darab;
+            this.Hossz = hossz;
+            this.Darab = 1;
         }
     }
 }

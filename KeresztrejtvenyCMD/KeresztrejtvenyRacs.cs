@@ -67,57 +67,74 @@ namespace KeresztrejtvenyCMD
 
         public int LegFugSzo()
         {
-            int leghoszjelen = 0;
             int leghoszever = 0;
             
             for (int i = 1; i <= OszlopokDb; i++)
             {
+                int leghoszjelen = 0;
+
                 for (int j = 1; j <= SorokDb; j++)
                 {
                     if (Racs[j, i] == '-')
                     {
                         leghoszjelen++;
                     }
-                    else if (Racs[j, i] == '#')
+                    else
                     {
-                        if (leghoszjelen > leghoszever)
-                        {
-                            leghoszever = leghoszjelen;
-                        }
+                        if (leghoszjelen > leghoszever) leghoszever = leghoszjelen;
+
                         leghoszjelen = 0;
                     }
                 }
+
+                if (leghoszjelen > leghoszever) leghoszever = leghoszjelen;
+
                 leghoszjelen = 0;
             }
 
             return leghoszever;
         }
 
-        public int VSZStat()
+        public List<VizszintStatisztika> VSZStat()
         {
-            List<VizszintStatisztika> stat = new List<VizszintStatisztika>();
-            
-            for (int i = 1; i <= OszlopokDb; i++)
+            Dictionary<int, int> statD = new Dictionary<int, int>();
+
+            for (int i = 1; i <= SorokDb; i++)
             {
-                for (int j = 1; j <= SorokDb; j++)
+                int hossz = 0;
+
+                for (int j = 1; j <= OszlopokDb; j++)
                 {
                     if (Racs[i, j] == '-')
                     {
-                        leghoszjelen++;
+                        hossz++;
                     }
-                    else if (Racs[j, i] == '#')
+                    else
                     {
-                        if (leghoszjelen > leghoszever)
+                        if (hossz >= 2)
                         {
-                            leghoszever = leghoszjelen;
+                            if (statD.ContainsKey(hossz)) statD[hossz]++;
+                            else statD[hossz] = 1;
                         }
-                        leghoszjelen = 0;
+                        hossz = 0;
                     }
                 }
-                leghoszjelen = 0;
+
+                if (hossz >= 2)
+                {
+                    if (statD.ContainsKey(hossz)) statD[hossz]++;
+                    else statD[hossz] = 1;
+                }
             }
 
-            return leghoszever;
+            List<VizszintStatisztika> stat = new List<VizszintStatisztika>();
+
+            foreach (var kvp in statD.OrderBy(x => x.Key))
+            {
+                stat.Add(new VizszintStatisztika(kvp.Key) { Darab = kvp.Value });
+            }
+
+            return stat;
         }
     }
 }
