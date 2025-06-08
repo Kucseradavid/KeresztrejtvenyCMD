@@ -10,7 +10,7 @@ namespace KeresztrejtvenyCMD
     {
         private List<string> Adatsorok;
         private char[,] Racs;
-        private int[] Sorszamok;
+        private int[,] Sorszamok;
 
         public int SorokDb { get; private set; }
         public int OszlopokDb { get; private set; }
@@ -22,9 +22,9 @@ namespace KeresztrejtvenyCMD
             SorokDb = Adatsorok.Count;
             OszlopokDb = Adatsorok[0].Length;
 
-            // Inicializálás +2 sorral és oszloppal
+            // Inicializálás +2 sorral és oszloppal (keret)
             Racs = new char[SorokDb + 2, OszlopokDb + 2];
-            Sorszamok = new int[SorokDb * OszlopokDb]; // tetszőleges kezdeti méret
+            Sorszamok = new int[SorokDb + 2, OszlopokDb + 2];
 
             FeltoltRacs();
         }
@@ -50,9 +50,10 @@ namespace KeresztrejtvenyCMD
         {
             for (int i = 1; i <= SorokDb; i++)
             {
+                Console.Write("\t");
                 for (int j = 1; j <= OszlopokDb; j++)
                 {
-                    if (Racs[i,j] == '-')
+                    if (Racs[i, j] == '-')
                     {
                         Console.Write("[]");
                     }
@@ -135,6 +136,43 @@ namespace KeresztrejtvenyCMD
             }
 
             return stat;
+        }
+
+        public void MegSzamoz()
+        {
+            int szam = 1;
+
+            for (int i = 1; i <= SorokDb; i++)
+            {
+                for (int j = 1; j <= OszlopokDb; j++)
+                {
+                    if (Racs[i, j] == '-')
+                    {
+                        bool vizszintes = (Racs[i, j - 1] == '#' || j == 1) && Racs[i, j + 1] == '-';
+                        bool fuggoleges = (Racs[i - 1, j] == '#' || i == 1) && Racs[i + 1, j] == '-';
+
+                        if (vizszintes || fuggoleges)
+                        {
+                            Sorszamok[i, j] = szam;
+                            szam++;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i <= SorokDb; i++)
+            {
+                Console.Write("\t");
+                for (int j = 1; j <= OszlopokDb; j++)
+                {
+                    int sorszam = Sorszamok[i, j];
+
+                    if (Racs[i, j] == '#') Console.Write("##");
+                    else if (sorszam > 0) Console.Write(sorszam.ToString("D2")); // 2 karakteres szám
+                    else Console.Write("[]");
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
